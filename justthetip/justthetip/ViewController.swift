@@ -9,10 +9,16 @@
 import UIKit
 
 class ViewController: UIViewController {
+  @IBOutlet weak var totalLabel: UILabel!
+  @IBOutlet weak var tipLabel: UILabel!
 
+  var percentage: Double = 0.0
+  var base: Double = 0.0
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
+    tipLabel.text = "$0"
+    totalLabel.text = "$0"
   }
 
   override func didReceiveMemoryWarning() {
@@ -20,6 +26,29 @@ class ViewController: UIViewController {
     // Dispose of any resources that can be recreated.
   }
 
-
+  func update() {
+    let tip = percentage * base
+    
+    tipLabel.text = NSString(format: "$%.2f", tip) as String
+    totalLabel.text = NSString(format: "$%.2f", tip + base) as String
+  }
+  
+  @IBAction func priceChanged(sender: AnyObject) {
+    let field = sender as! UITextField
+    
+    base = Double(field.text.toInt()!)
+    
+    update()
+  }
+  
+  @IBAction func percentageChanged(sender: AnyObject) {
+    let chooser = sender as! UISegmentedControl
+    var text = chooser.titleForSegmentAtIndex(chooser.selectedSegmentIndex)!
+    text = text.substringWithRange(text.startIndex ..< advance(text.endIndex, -1))
+    
+    percentage = Double(text.toInt()!) / 100.0
+    
+    update()
+  }
 }
 
