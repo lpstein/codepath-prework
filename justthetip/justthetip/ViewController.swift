@@ -9,6 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+  @IBOutlet weak var baseField: UITextField!
   @IBOutlet weak var totalLabel: UILabel!
   @IBOutlet weak var tipLabel: UILabel!
 
@@ -21,6 +22,10 @@ class ViewController: UIViewController {
     totalLabel.text = "$0"
   }
 
+  override func viewDidAppear(animated: Bool) {
+    baseField.becomeFirstResponder()
+  }
+  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
@@ -34,9 +39,8 @@ class ViewController: UIViewController {
   }
   
   @IBAction func priceChanged(sender: AnyObject) {
-    let field = sender as! UITextField
-    
-    base = Double(field.text.toInt()!)
+    let field = sender as! UITextField    
+    base = (field.text as NSString).doubleValue
     
     update()
   }
