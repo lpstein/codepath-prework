@@ -12,14 +12,19 @@ class ViewController: UIViewController {
   @IBOutlet weak var baseField: UITextField!
   @IBOutlet weak var totalLabel: UILabel!
   @IBOutlet weak var tipLabel: UILabel!
+  @IBOutlet weak var tipChooser: UISegmentedControl!
 
   var percentage: Double = 0.0
   var base: Double = 0.0
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    tipLabel.text = "$0"
-    totalLabel.text = "$0"
+    
+    baseField.text = NSString(format: "%.2f", base) as String
+    
+    let settings = NSUserDefaults.standardUserDefaults()
+    tipChooser.selectedSegmentIndex = settings.integerForKey("default_index")
+    self.percentageChanged(tipChooser)
   }
 
   override func viewDidAppear(animated: Bool) {
