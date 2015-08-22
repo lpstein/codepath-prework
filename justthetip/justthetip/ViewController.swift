@@ -21,16 +21,24 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
   }
-
+  
   override func viewWillAppear(animated: Bool) {
-    baseField.becomeFirstResponder()
+    super.viewDidAppear(animated)
     
     tipChooser.selectedSegmentIndex = settings.integerForKey("default_index")
     self.percentageChanged(tipChooser)
-    
-    if (base != 0) {
-      baseField.text = NSString(format: "%.2f", base) as String
+  
+    let lastUpdated = settings.doubleForKey("last_price_time")
+    let now = NSDate().timeIntervalSince1970
+    if (lastUpdated != 0 && (now - lastUpdated) < 600) {
+      base = settings.doubleForKey("last_price")
+      if (base != 0) {
+        baseField.text = NSString(format: "%.2f", settings.doubleForKey("last_price")) as String
+        update()
+      }
     }
+    
+    baseField.becomeFirstResponder()
   }
   
   override func didReceiveMemoryWarning() {
@@ -49,13 +57,14 @@ class ViewController: UIViewController {
     
     tipLabel.text = format(tip)
     totalLabel.text = format(tip + base)
-//    baseField.text = format(base)
   }
   
   @IBAction func priceChanged(sender: AnyObject) {
     let field = sender as! UITextField    
     base = (field.text as NSString).doubleValue
-    
+    settings.setDouble(base, forKey: "last_price")
+    settings.setDouble(NSDate().timeIntervalSince1970, forKey: "last_price_time")
+    settings.synchronize()
     update()
   }
   
