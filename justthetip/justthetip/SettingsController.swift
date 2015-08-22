@@ -9,10 +9,13 @@
 import UIKit
 
 class SettingsController: UIViewController {
+  @IBOutlet weak var chooser: UISegmentedControl!
+  
   var settings: NSUserDefaults = NSUserDefaults.standardUserDefaults()
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    chooser.selectedSegmentIndex = settings.integerForKey("default_index")
   }
 
   override func didReceiveMemoryWarning() {
@@ -22,7 +25,6 @@ class SettingsController: UIViewController {
   
 
   @IBAction func percentageChanged(sender: AnyObject) {
-    let chooser = sender as! UISegmentedControl
     settings.setInteger(chooser.selectedSegmentIndex, forKey: "default_index")
     settings.synchronize()
   }

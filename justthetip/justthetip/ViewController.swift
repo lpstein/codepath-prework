@@ -20,15 +20,18 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    baseField.text = NSString(format: "%.2f", base) as String
-    
     let settings = NSUserDefaults.standardUserDefaults()
     tipChooser.selectedSegmentIndex = settings.integerForKey("default_index")
     self.percentageChanged(tipChooser)
+    
+    
   }
 
   override func viewDidAppear(animated: Bool) {
     baseField.becomeFirstResponder()
+    if (base != 0) {
+      baseField.text = NSString(format: "%.2f", base) as String
+    }
   }
   
   override func didReceiveMemoryWarning() {
@@ -36,11 +39,18 @@ class ViewController: UIViewController {
     // Dispose of any resources that can be recreated.
   }
 
+  func format(n: Double) -> String {
+    let formatter = NSNumberFormatter()
+    formatter.numberStyle = .CurrencyStyle
+    return formatter.stringFromNumber(n)!
+  }
+  
   func update() {
     let tip = percentage * base
     
-    tipLabel.text = NSString(format: "$%.2f", tip) as String
-    totalLabel.text = NSString(format: "$%.2f", tip + base) as String
+    tipLabel.text = format(tip)
+    totalLabel.text = format(tip + base)
+//    baseField.text = format(base)
   }
   
   @IBAction func priceChanged(sender: AnyObject) {
@@ -55,9 +65,11 @@ class ViewController: UIViewController {
     var text = chooser.titleForSegmentAtIndex(chooser.selectedSegmentIndex)!
     text = text.substringWithRange(text.startIndex ..< advance(text.endIndex, -1))
     
-    percentage = Double(text.toInt()!) / 100.0
-    
-    update()
+    var val = text.toInt()
+    if (val != nil) {
+      percentage = Double(text.toInt()!) / 100.0
+      update()
+    }
   }
 }
 
