@@ -16,19 +16,18 @@ class ViewController: UIViewController {
 
   var percentage: Double = 0.0
   var base: Double = 0.0
+  let settings = NSUserDefaults.standardUserDefaults()
   
   override func viewDidLoad() {
     super.viewDidLoad()
+  }
+
+  override func viewWillAppear(animated: Bool) {
+    baseField.becomeFirstResponder()
     
-    let settings = NSUserDefaults.standardUserDefaults()
     tipChooser.selectedSegmentIndex = settings.integerForKey("default_index")
     self.percentageChanged(tipChooser)
     
-    
-  }
-
-  override func viewDidAppear(animated: Bool) {
-    baseField.becomeFirstResponder()
     if (base != 0) {
       baseField.text = NSString(format: "%.2f", base) as String
     }
